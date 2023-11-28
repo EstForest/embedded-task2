@@ -1,0 +1,32 @@
+// 2.2 pang
+#include "redismodule.h"
+
+int PingCommand(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+    RedisModule_ReplyWithSimpleString(ctx, "PONG");
+    return REDISMODULE_OK;
+}
+
+int PangCommand(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+    RedisModule_ReplyWithSimpleString(ctx, "PUNG");
+    return REDISMODULE_OK;
+}
+
+int RedisModule_OnLoad(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) {
+    if(RedisModule_Init(ctx,"custom_commands_module"
+1
+REDISMODULE_APIVER_1) == REDISMODULE_ERR) {
+        return REDISMODULE_ERR;
+    }
+
+    // ping 명령어
+    if (RedisModule_CreateCommand(ctx, "ping", PingCommand, "readonly", 0, 0, 0) == REDISMODULE_ERR) {
+        return REDISMODULE_ERR;
+    }
+
+    // pang 명령어
+    if (RedisModule_CreateCommand(ctx, "pang", PangCommand, "readonly", 0, 0, 0) == REDISMODULE_ERR) {
+        return REDISMODULE_ERR;
+    }
+
+    return REDISMODULE_OK;
+}
